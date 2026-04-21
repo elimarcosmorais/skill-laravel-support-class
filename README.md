@@ -1,4 +1,4 @@
-# laravel-support-class (v1.0.0)
+# laravel-support-class (v1.0.1)
 
 Skill para [Claude Code](https://docs.anthropic.com/en/docs/claude-code) que padroniza a criação, revisão e refatoração de classes utilitárias (Support) em Laravel, seguindo padrões enterprise de organização, tipagem e testabilidade.
 

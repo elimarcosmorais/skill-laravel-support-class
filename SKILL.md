@@ -37,20 +37,20 @@ app/Support/
 Subdiretórios são criados sob demanda — incluir apenas os que o utilitário precisa.
 Tipos de classes auxiliares permitidos:
 
-| Subdiretório     | Conteúdo                                   | Exemplo                        |
-|------------------|--------------------------------------------|--------------------------------|
-| `DTOs/`          | Data Transfer Objects (input/output)       | `ValidationResult.php`         |
-| `Enums/`         | Enums tipados com BackedEnum               | `ValidationRule.php`           |
-| `Exceptions/`    | Exceções específicas da classe             | `ValidationFailedException.php`|
-| `ValueObjects/`  | Objetos imutáveis de valor                 | `FieldError.php`               |
-| `Constants/`     | Constantes agrupadas                       | `FormatPatterns.php`           |
+| Subdiretório    | Conteúdo                             | Exemplo                         |
+| --------------- | ------------------------------------ | ------------------------------- |
+| `DTOs/`         | Data Transfer Objects (input/output) | `ValidationResult.php`          |
+| `Enums/`        | Enums tipados com BackedEnum         | `ValidationRule.php`            |
+| `Exceptions/`   | Exceções específicas da classe       | `ValidationFailedException.php` |
+| `ValueObjects/` | Objetos imutáveis de valor           | `FieldError.php`                |
+| `Constants/`    | Constantes agrupadas                 | `FormatPatterns.php`            |
 
 **Classes NÃO permitidas como auxiliares de Support:**
 
-| Tipo              | Motivo                                                     |
-|-------------------|------------------------------------------------------------|
-| `Services/`       | Services são camada acima — NUNCA auxiliar de Support       |
-| `Repositories/`   | Acesso a dados pertence a Services ou ao domínio           |
+| Tipo            | Motivo                                                |
+| --------------- | ----------------------------------------------------- |
+| `Services/`     | Services são camada acima — NUNCA auxiliar de Support |
+| `Repositories/` | Acesso a dados pertence a Services ou ao domínio      |
 
 ---
 
@@ -310,11 +310,11 @@ Guia completo de decisão em **`references/container-binding-guide.md`**.
 
 ### Resumo Rápido
 
-| Binding     | Quando usar                                         |
-|-------------|-----------------------------------------------------|
-| `singleton` | Sem estado mutável E reutilizado em vários pontos   |
+| Binding     | Quando usar                                          |
+| ----------- | ---------------------------------------------------- |
+| `singleton` | Sem estado mutável E reutilizado em vários pontos    |
 | `scoped`    | Estado mutável por request OU isolamento por request |
-| `bind`      | Sem estado, criação barata, uso pontual             |
+| `bind`      | Sem estado, criação barata, uso pontual              |
 | Nenhum      | Sem interface, sem config dinâmica — auto-resolve    |
 
 ### Regra de Ouro
@@ -375,17 +375,17 @@ it('validates a required field', function () {
 
 ## Referências
 
-| Arquivo                                  | Conteúdo                                     | Carregar quando                        |
-|------------------------------------------|----------------------------------------------|----------------------------------------|
-| `references/container-binding-guide.md`  | Decisão singleton vs scoped vs bind          | Registrando support no container       |
-| `references/pest-testing-guide.md`       | Padrões de teste com Pest para supports      | Criando testes para supports           |
-| `references/support-class-template.md`   | Template completo com exemplo real           | Criando support do zero                |
+| Arquivo                                 | Conteúdo                                | Carregar quando                  |
+| --------------------------------------- | --------------------------------------- | -------------------------------- |
+| `references/container-binding-guide.md` | Decisão singleton vs scoped vs bind     | Registrando support no container |
+| `references/pest-testing-guide.md`      | Padrões de teste com Pest para supports | Criando testes para supports     |
+| `references/support-class-template.md`  | Template completo com exemplo real      | Criando support do zero          |
 
 ---
 
 ## Documentação de Uso para AI (Obrigatório)
 
-Toda support class DEVE ter UM ÚNICO arquivo `.md` no mesmo diretório. O nome do
+Toda support class DEVE ter UM ÚNICO arquivo `.md` em `.claude/docs/support/`. O nome do
 arquivo é a conversão do nome da classe de PascalCase para kebab-case.
 
 **Regra de nomenclatura**: cada letra maiúscula (exceto a primeira) é precedida por
@@ -400,6 +400,12 @@ hífen, tudo minúsculo.
 Não é documentação para desenvolvedores — é referência compacta, sem didática,
 otimizada para economia de tokens.
 
+### Regra Fundamental
+
+**NUNCA alterar código de support class existente sem apresentar o diagnóstico
+primeiro e receber autorização explícita do usuário.** Mesmo que as correções sejam
+óbvias ou triviais, o usuário precisa saber o que será alterado.
+
 ### Regra Fundamental: Um Arquivo, Uma Documentação
 
 NUNCA gerar documentos separados para classes auxiliares. NUNCA criar seções
@@ -411,9 +417,11 @@ DENTRO do contexto da classe principal, como extensão da sua API.
 ### Localização
 
 ```
+.claude/docs/support/
+└── input-validator.md     ← arquivo único de instruções AI
+
 app/Support/Validator/
 ├── InputValidator.php
-├── input-validator.md     ← arquivo único de instruções AI
 ├── DTOs/
 │   └── ValidationResult.php
 ├── ValueObjects/
@@ -435,7 +443,7 @@ partir da classe principal. Isso acontece quando:
 Seguir EXATAMENTE esta estrutura. Não alterar a ordem, não adicionar seções, não
 remover seções.
 
-```markdown
+````markdown
 # {SupportName}
 
 Namespace: `App\Support\GroupName`
@@ -477,6 +485,7 @@ Descrição.
 
 A variável que recebe a instância da support DEVE usar o nome da classe em
 camelCase. Exemplos:
+
 - `InputValidator` → `$inputValidator`
 - `NavigationHistory` → `$navigationHistory`
 - `S3FileUploader` → `$s3FileUploader`
@@ -491,9 +500,9 @@ $resultado = $utilityName->metodoSimples($valor);
 // Método com classe auxiliar (encadeamento)
 $resultado = $utilityName->metodoQueRetornaAuxiliar()
     ->metodoAuxiliarA($param)
-    ->metodoAuxiliarB();
+->metodoAuxiliarB();
 \```
-```
+````
 
 ### Regras de Escrita
 
@@ -518,7 +527,7 @@ $resultado = $utilityName->metodoQueRetornaAuxiliar()
 
 ### Exemplo Real: input-validator.md
 
-```markdown
+````markdown
 # InputValidator
 
 Namespace: `App\Support\Validator`
@@ -578,11 +587,11 @@ $inputValidator = app(InputValidator::class);
 
 // Validação em lote
 $result = $inputValidator->validate(
-    input: ['email' => 'a@b.com', 'name' => ''],
-    rules: [
-        'email' => [ValidationRule::Required, ValidationRule::Email],
-        'name'  => [ValidationRule::Required],
-    ],
+input: ['email' => 'a@b.com', 'name' => ''],
+rules: [
+'email' => [ValidationRule::Required, ValidationRule::Email],
+'name' => [ValidationRule::Required],
+],
 );
 
 // Validação fluente campo a campo
@@ -591,7 +600,7 @@ $error = $inputValidator->field('email')
     ->email()
     ->check($payload['email']);
 \```
-```
+````
 
 ---
 
@@ -637,5 +646,5 @@ Verificar antes de entregar qualquer support:
 - [ ] Diretório da support criado em `app/Support/` ou `app/Support/GroupName/`
 - [ ] Nenhuma Service ou Repository como classe auxiliar
 - [ ] Registro no AppServiceProvider justificado (ou auto-resolve documentado)
-- [ ] Arquivo `{support-name}.md` (kebab-case) com instruções AI criado no diretório da support
+- [ ] Arquivo `{support-name}.md` (kebab-case) com instruções AI criado em `.claude/docs/support/`
 - [ ] Testes com Pest quando solicitados
